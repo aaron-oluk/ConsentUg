@@ -11,8 +11,7 @@
     <meta name="author" content="Consent Uganda">
 
     {{-- Favicon --}}
-    <link rel="icon" href="images/favicon.png" type="image/x-icon">
-    <link rel="icon" href="{{asset('images/logo.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
