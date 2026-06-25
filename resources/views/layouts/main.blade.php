@@ -135,7 +135,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <p>
-                        Designed by <a href="https://techleon.org" target="_blank" class="leon">Aaron Leonard</a>
+                        Designed by <a href="https://aloflux.com" target="_blank" class="leon">Aloflux Company Limited</a>
                     </p>
                 </div>
             </div>
