@@ -29,7 +29,7 @@
                     </div>
 
                     <div class="blog-post-content">
-                        {!! nl2br(e($blog->content)) !!}
+                        {!! nl2br(e(str_replace('\r\n', "\n", str_replace('\r', "\n", $blog->content)))) !!}
                     </div>
                 </article>
 

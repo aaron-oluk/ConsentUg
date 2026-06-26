@@ -44,7 +44,7 @@ class BlogController extends Controller
 
         Blog::create([
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => str_replace(['\r\n', '\r'], "\n", $request->content),
             'image' => $imageName,
             'author' => auth()->user()->name,
         ]);
@@ -67,7 +67,7 @@ class BlogController extends Controller
 
         $data = [
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => str_replace(['\r\n', '\r'], "\n", $request->content),
             'author' => $request->author,
         ];
 

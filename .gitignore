@@ -21,3 +21,6 @@ package-lock.json
 /.fleet
 /.idea
 /.vscode
+
+# OS artifacts
+.DS_Store
