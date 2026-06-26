@@ -16,7 +16,7 @@
             <div class="col-lg-8 mx-auto">
                 <article class="blog-post">
                     @if ($blog->image)
-                        <img src="{{ asset('images/' . $blog->image) }}" class="img-fluid rounded mb-4"
+                        <img src="{{ asset('storage/blog-images/' . $blog->image) }}" class="img-fluid rounded mb-4"
                             alt="{{ $blog->title }}">
                     @endif
 

@@ -40,7 +40,7 @@ class BlogController extends Controller
         ]);
 
         $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $imageName);
+        $request->image->storeAs('blog-images', $imageName, 'public');
 
         Blog::create([
             'title' => $request->title,
@@ -72,14 +72,12 @@ class BlogController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            // Delete old image
             if ($blog->image) {
-                Storage::delete('public/images/' . $blog->image);
+                Storage::disk('public')->delete('blog-images/' . $blog->image);
             }
 
-            // Store new image
             $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
+            $request->image->storeAs('blog-images', $imageName, 'public');
             $data['image'] = $imageName;
         }
 
@@ -94,9 +92,8 @@ class BlogController extends Controller
     {
         $blog = Blog::findOrFail($id);
 
-        // Delete image if exists
         if ($blog->image) {
-            Storage::delete('public/images/' . $blog->image);
+            Storage::disk('public')->delete('blog-images/' . $blog->image);
         }
 
         $blog->delete();
