@@ -8,28 +8,68 @@
     </div>
 
     <nav class="sidebar-menu">
-        <p class="menu-label">Main</p>
-        <ul class="nav-links">
-            @php
-                $mainRoutes = [
-                    [route('dashboard'), 'bxs-dashboard', 'Dashboard', request()->routeIs('dashboard')],
-                    [route('dashboard.blogs'), 'bx-edit', 'Blog Management', request()->routeIs('dashboard.blogs')],
-                    [route('dashboard.complaints.index'), 'bx-message-square-detail', 'Complaints', request()->routeIs('dashboard.complaints.*')],
-                    [route('users'), 'bx-user', 'Users', request()->routeIs('users')],
-                    [route('dashboard.reports.index'), 'bx-file', 'Reports', request()->routeIs('dashboard.reports.*')],
-                    [route('gallery.index'), 'bx-image', 'Gallery', request()->routeIs('gallery.*')],
-                ];
-            @endphp
+        @php
+            $user = auth()->user();
 
-            @foreach ($mainRoutes as [$url, $icon, $label, $active])
-                <li data-tooltip="{{ $label }}">
-                    <a href="{{ $url }}" class="{{ $active ? 'active' : '' }}">
-                        <i class='bx {{ $icon }}'></i>
-                        <span class="link_name">{{ $label }}</span>
-                    </a>
-                </li>
-            @endforeach
-        </ul>
+            $mainRoutes = collect([
+                [
+                    'url' => route('dashboard'),
+                    'icon' => 'bxs-dashboard',
+                    'label' => 'Dashboard',
+                    'active' => request()->routeIs('dashboard'),
+                    'allowed' => $user->canAccessDashboard(),
+                ],
+                [
+                    'url' => route('dashboard.blogs'),
+                    'icon' => 'bx-edit',
+                    'label' => 'Blog Management',
+                    'active' => request()->routeIs('dashboard.blogs'),
+                    'allowed' => $user->canManageContent(),
+                ],
+                [
+                    'url' => route('dashboard.complaints.index'),
+                    'icon' => 'bx-message-square-detail',
+                    'label' => 'Complaints',
+                    'active' => request()->routeIs('dashboard.complaints.*'),
+                    'allowed' => $user->canManageComplaints(),
+                ],
+                [
+                    'url' => route('users'),
+                    'icon' => 'bx-user',
+                    'label' => 'Users',
+                    'active' => request()->routeIs('users'),
+                    'allowed' => $user->canManageUsers(),
+                ],
+                [
+                    'url' => route('dashboard.reports.index'),
+                    'icon' => 'bx-file',
+                    'label' => 'Reports',
+                    'active' => request()->routeIs('dashboard.reports.*'),
+                    'allowed' => $user->canManageContent(),
+                ],
+                [
+                    'url' => route('gallery.index'),
+                    'icon' => 'bx-image',
+                    'label' => 'Gallery',
+                    'active' => request()->routeIs('gallery.*'),
+                    'allowed' => $user->canManageContent(),
+                ],
+            ])->where('allowed', true)->values();
+        @endphp
+
+        @if ($mainRoutes->isNotEmpty())
+            <p class="menu-label">Main</p>
+            <ul class="nav-links">
+                @foreach ($mainRoutes as $item)
+                    <li data-tooltip="{{ $item['label'] }}">
+                        <a href="{{ $item['url'] }}" class="{{ $item['active'] ? 'active' : '' }}">
+                            <i class='bx {{ $item['icon'] }}'></i>
+                            <span class="link_name">{{ $item['label'] }}</span>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
 
         <p class="menu-label">Account</p>
         <ul class="nav-links">

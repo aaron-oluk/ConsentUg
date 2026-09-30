@@ -11,7 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'can.access' => \App\Http\Middleware\EnsureUserCan::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
