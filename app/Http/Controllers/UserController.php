@@ -11,8 +11,6 @@ class UserController extends Controller
 {
     public function index()
     {
-        abort_unless(auth()->user()->hasAdminAccess(), 403);
-
         $users = User::orderBy('created_at', 'desc')->paginate(10);
 
         return view('dashboard.users.index', compact('users'));
@@ -20,8 +18,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        abort_unless(auth()->user()->hasAdminAccess(), 403);
-
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -43,15 +39,11 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        abort_unless(auth()->user()->hasAdminAccess(), 403);
-
         if ($user->isSuperAdmin() && ! auth()->user()->isSuperAdmin()) {
             return back()->with('error', 'You cannot edit a super admin account');
         }
 
-        $isEditingSelf = $user->id === auth()->id();
-
-        if ($isEditingSelf) {
+        if ($user->id === auth()->id()) {
             return back()->with('error', 'Update your own password in Settings');
         }
 
@@ -79,8 +71,6 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        abort_unless(auth()->user()->hasAdminAccess(), 403);
-
         if ($user->id === auth()->id()) {
             return back()->with('error', 'You cannot delete your own account');
         }

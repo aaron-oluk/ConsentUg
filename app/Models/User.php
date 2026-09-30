@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isEditor(): bool
+    {
+        return $this->role === 'editor';
+    }
+
     public function isUser(): bool
     {
         return $this->role === 'user';
@@ -65,6 +70,26 @@ class User extends Authenticatable
 
     public function hasAdminAccess(): bool
     {
-        return in_array($this->role, ['admin', 'super_admin']);
+        return in_array($this->role, ['admin', 'super_admin'], true);
+    }
+
+    public function canManageUsers(): bool
+    {
+        return $this->hasAdminAccess();
+    }
+
+    public function canManageComplaints(): bool
+    {
+        return $this->hasAdminAccess();
+    }
+
+    public function canManageContent(): bool
+    {
+        return in_array($this->role, ['editor', 'admin', 'super_admin'], true);
+    }
+
+    public function canAccessDashboard(): bool
+    {
+        return in_array($this->role, ['editor', 'admin', 'super_admin'], true);
     }
 }

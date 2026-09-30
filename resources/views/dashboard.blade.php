@@ -8,9 +8,11 @@
             <h1>Dashboard overview</h1>
             <p>Track users, content, reports, and incoming complaints at a glance.</p>
         </div>
-        <a href="{{ route('dashboard.blogs') }}" class="btn btn-primary">
-            <i class='bx bx-plus'></i> New blog post
-        </a>
+        @if (auth()->user()->canManageContent())
+            <a href="{{ route('dashboard.blogs') }}" class="btn btn-primary">
+                <i class='bx bx-plus'></i> New blog post
+            </a>
+        @endif
     </div>
 
     <div class="stat-grid">
@@ -47,7 +49,9 @@
         <section class="dash-panel">
             <div class="dash-panel-header">
                 <h2>Recent blog posts</h2>
-                <a href="{{ route('dashboard.blogs') }}" class="btn-dash-ghost">View all</a>
+                @if (auth()->user()->canManageContent())
+                    <a href="{{ route('dashboard.blogs') }}" class="btn-dash-ghost">View all</a>
+                @endif
             </div>
             <div class="dash-panel-body">
                 <div class="table-responsive">
@@ -80,7 +84,9 @@
         <section class="dash-panel">
             <div class="dash-panel-header">
                 <h2>Recent complaints</h2>
-                <a href="{{ route('dashboard.complaints.index') }}" class="btn-dash-ghost">View all</a>
+                @if (auth()->user()->canManageComplaints())
+                    <a href="{{ route('dashboard.complaints.index') }}" class="btn-dash-ghost">View all</a>
+                @endif
             </div>
             <div class="dash-panel-body">
                 <div class="table-responsive">
