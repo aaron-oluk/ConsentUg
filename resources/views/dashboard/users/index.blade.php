@@ -67,7 +67,7 @@
                                         $canManage = ! $user->isSuperAdmin() || auth()->user()->isSuperAdmin();
                                     @endphp
 
-                                    @if ($canManage)
+                                    @if ($canManage && $user->id !== auth()->id())
                                         <div class="btn-group" role="group">
                                             <button
                                                 type="button"
@@ -78,21 +78,21 @@
                                                 <i class='bx bx-edit-alt'></i> Edit
                                             </button>
 
-                                            @if ($user->id !== auth()->id())
-                                                <form
-                                                    action="{{ route('users.destroy', $user) }}"
-                                                    method="POST"
-                                                    class="d-inline"
-                                                    onsubmit="return confirm('Are you sure you want to delete this user?');"
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">
-                                                        <i class='bx bx-trash'></i>
-                                                    </button>
-                                                </form>
-                                            @endif
+                                            <form
+                                                action="{{ route('users.destroy', $user) }}"
+                                                method="POST"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to delete this user?');"
+                                            >
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class='bx bx-trash'></i>
+                                                </button>
+                                            </form>
                                         </div>
+                                    @elseif ($user->id === auth()->id())
+                                        <span class="text-muted small">Use Settings for your password</span>
                                     @else
                                         <span class="text-muted small">Protected</span>
                                     @endif
@@ -176,10 +176,11 @@
         </div>
     </div>
 
-    {{-- Edit User Modals --}}
+    {{-- Edit User Modals (other users only) --}}
     @foreach ($users as $user)
         @php
-            $canManage = ! $user->isSuperAdmin() || auth()->user()->isSuperAdmin();
+            $canManage = (! $user->isSuperAdmin() || auth()->user()->isSuperAdmin())
+                && $user->id !== auth()->id();
         @endphp
 
         @if ($canManage)
@@ -229,13 +230,23 @@
                                     <div class="form-text">Leave blank if you do not want to change the password.</div>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="edit_password_confirmation_{{ $user->id }}" class="form-label">Confirm password</label>
+                                    <input
+                                        type="password"
+                                        class="form-control"
+                                        id="edit_password_confirmation_{{ $user->id }}"
+                                        name="password_confirmation"
+                                        placeholder="Confirm new password"
+                                        autocomplete="new-password"
+                                    >
+                                </div>
+                                <div class="mb-3">
                                     <label for="edit_role_{{ $user->id }}" class="form-label">Role</label>
                                     <select
                                         class="form-select"
                                         id="edit_role_{{ $user->id }}"
                                         name="role"
                                         required
-                                        @disabled($user->id === auth()->id())
                                     >
                                         <option value="user" @selected(old('role', $user->role) === 'user')>User</option>
                                         <option value="editor" @selected(old('role', $user->role) === 'editor')>Editor</option>
@@ -244,10 +255,6 @@
                                             <option value="super_admin" @selected(old('role', $user->role) === 'super_admin')>Super admin</option>
                                         @endif
                                     </select>
-                                    @if ($user->id === auth()->id())
-                                        <input type="hidden" name="role" value="{{ $user->role }}">
-                                        <div class="form-text">You cannot change your own role.</div>
-                                    @endif
                                 </div>
                                 <div class="form-check">
                                     <input
@@ -257,12 +264,8 @@
                                         id="edit_is_active_{{ $user->id }}"
                                         name="is_active"
                                         @checked(old('is_active', $user->is_active))
-                                        @disabled($user->id === auth()->id())
                                     >
                                     <label class="form-check-label" for="edit_is_active_{{ $user->id }}">Active account</label>
-                                    @if ($user->id === auth()->id())
-                                        <input type="hidden" name="is_active" value="1">
-                                    @endif
                                 </div>
                             </div>
                             <div class="modal-footer">

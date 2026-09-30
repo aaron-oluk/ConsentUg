@@ -49,21 +49,19 @@ class UserController extends Controller
             return back()->with('error', 'You cannot edit a super admin account');
         }
 
+        $isEditingSelf = $user->id === auth()->id();
+
+        if ($isEditingSelf) {
+            return back()->with('error', 'Update your own password in Settings');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => ['nullable', Password::defaults()],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
             'role' => ['required', Rule::in($this->assignableRoles())],
             'is_active' => ['nullable', 'boolean'],
         ]);
-
-        if ($user->id === auth()->id() && $validated['role'] !== auth()->user()->role) {
-            return back()->with('error', 'You cannot change your own role');
-        }
-
-        if ($user->id === auth()->id() && ! $request->boolean('is_active', true)) {
-            return back()->with('error', 'You cannot deactivate your own account');
-        }
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
