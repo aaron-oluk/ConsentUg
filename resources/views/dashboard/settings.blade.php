@@ -4,8 +4,18 @@
     <div class="container">
         <h1 class="mb-4">Settings</h1>
 
-        @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @if (session('status') === 'profile-updated')
+            <div class="alert alert-success alert-dismissible fade show dash-alert" role="alert">
+                Profile updated successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @elseif (session('status') === 'password-updated')
+            <div class="alert alert-success alert-dismissible fade show dash-alert" role="alert">
+                Password updated successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @elseif (session('status'))
+            <div class="alert alert-success alert-dismissible fade show dash-alert" role="alert">
                 {{ session('status') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>

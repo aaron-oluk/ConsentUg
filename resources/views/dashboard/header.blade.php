@@ -40,10 +40,6 @@
                     <p class="profile-email">{{ Auth::user()->email }}</p>
                 </div>
             </div>
-            <a href="{{ route('profile.edit') }}" class="profile-dropdown-link">
-                <i class='bx bx-user-circle'></i>
-                Profile
-            </a>
             <a href="{{ route('settings') }}" class="profile-dropdown-link">
                 <i class='bx bx-cog'></i>
                 Settings
