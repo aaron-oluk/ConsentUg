@@ -55,8 +55,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/blogs/{blog}', [BlogController::class, 'update'])->name('blogs.update');
     Route::delete('/blogs/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
 
-    // Profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Profile routes (forms live on Settings; keep update/destroy endpoints)
+    Route::get('/profile', fn () => redirect()->route('settings'))->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
