@@ -297,6 +297,40 @@
     box-shadow: 0 0 0 0.2rem rgba(38, 59, 92, 0.12);
 }
 
+.password-input-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.password-input-wrap .password-input-field,
+.password-input-wrap input {
+    padding-right: 2.75rem !important;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: rgba(38, 59, 92, 0.45);
+    cursor: pointer;
+    padding: 0;
+    z-index: 2;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus {
+    color: var(--brand-navy);
+    outline: none;
+}
+
 @media (max-width: 1100px) {
     .stat-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));

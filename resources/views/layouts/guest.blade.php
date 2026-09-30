@@ -13,6 +13,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="{{ asset('js/password-toggle.js') }}" defer></script>
     </head>
     <body class="font-sans text-brand-navy antialiased">
         <div class="relative min-h-screen overflow-hidden bg-brand-mist">
