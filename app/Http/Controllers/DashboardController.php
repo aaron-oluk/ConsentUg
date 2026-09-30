@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\Document;
+use App\Models\ContactMessage;
 
 class DashboardController extends Controller
 {
@@ -14,14 +15,9 @@ class DashboardController extends Controller
             'totalUsers' => User::count(),
             'totalBlogs' => Blog::count(),
             'totalReports' => Document::count(),
-            // 'totalComplaints' => Complaint::count(),
-            'recentBlogs' => Blog::with('author')
-                                ->latest()
-                                ->take(5)
-                                ->get(),
-            // 'recentComplaints' => Complaint::latest()
-            //                     ->take(5)
-            //                     ->get(),
+            'totalComplaints' => ContactMessage::count(),
+            'recentBlogs' => Blog::latest()->take(5)->get(),
+            'recentComplaints' => ContactMessage::latest()->take(5)->get(),
         ];
 
         return view('dashboard', $data);

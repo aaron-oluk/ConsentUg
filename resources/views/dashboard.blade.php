@@ -1,139 +1,113 @@
 @extends('dashboard.main')
-@section('title', 'Dashboard - ConsentUG')
+
+@section('title', 'Dashboard - Consent Uganda')
+
 @section('content')
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Dashboard Overview</h1>
+    <div class="dash-page-header">
+        <div>
+            <h1>Dashboard overview</h1>
+            <p>Track users, content, reports, and incoming complaints at a glance.</p>
+        </div>
+        <a href="{{ route('dashboard.blogs') }}" class="btn btn-primary">
+            <i class='bx bx-plus'></i> New blog post
+        </a>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-card users">
+            <div class="stat-icon"><i class='bx bx-user'></i></div>
+            <p class="stat-label">Total users</p>
+            <p class="stat-value">{{ $totalUsers }}</p>
+            <p class="stat-meta">Registered accounts</p>
         </div>
 
-        <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Total Users</h6>
-                                <h2 class="mb-0">{{ $totalUsers }}</h2>
-                            </div>
-                            <i class='bx bx-user bx-lg'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card bg-success text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Blog Posts</h6>
-                                <h2 class="mb-0">{{ $totalBlogs }}</h2>
-                            </div>
-                            <i class='bx bx-news bx-lg'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card bg-warning text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Reports</h6>
-                                <h2 class="mb-0">{{ $totalReports }}</h2>
-                            </div>
-                            <i class='bx bx-file bx-lg'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card bg-danger text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title">Complaints</h6>
-                                {{-- <h2 class="mb-0">{{ $totalComplaints }}</h2> --}}
-                            </div>
-                            <i class='bx bx-message-square-detail bx-lg'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-card blogs">
+            <div class="stat-icon"><i class='bx bx-news'></i></div>
+            <p class="stat-label">Blog posts</p>
+            <p class="stat-value">{{ $totalBlogs }}</p>
+            <p class="stat-meta">Published articles</p>
         </div>
 
-        <div class="row">
-            <!-- Recent Blog Posts -->
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Recent Blog Posts</h5>
-                        <a href="{{ route('dashboard.blogs') }}" class="btn btn-sm btn-primary">View All</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Author</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($recentBlogs as $blog)
-                                        <tr>
-                                            <td>{{ Str::limit($blog->title, 30) }}</td>
-                                            <td>{{ $blog->author }}</td>
-                                            <td>{{ $blog->created_at->format('M d, Y') }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="3" class="text-center">No blog posts yet</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Complaints -->
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Recent Complaints</h5>
-                        <a href="{{ route('dashboard.complaints.index') }}" class="btn btn-sm btn-primary">View All</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Subject</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                {{-- <tbody>
-                                    @forelse($recentComplaints as $complaint)
-                                        <tr>
-                                            <td>{{ $complaint->name }}</td>
-                                            <td>{{ Str::limit($complaint->message, 30) }}</td>
-                                            <td>{{ $complaint->created_at->format('M d, Y') }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="3" class="text-center">No complaints yet</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody> --}}
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-card reports">
+            <div class="stat-icon"><i class='bx bx-file'></i></div>
+            <p class="stat-label">Reports</p>
+            <p class="stat-value">{{ $totalReports }}</p>
+            <p class="stat-meta">Uploaded documents</p>
         </div>
+
+        <div class="stat-card complaints">
+            <div class="stat-icon"><i class='bx bx-message-square-detail'></i></div>
+            <p class="stat-label">Complaints</p>
+            <p class="stat-value">{{ $totalComplaints }}</p>
+            <p class="stat-meta">Contact submissions</p>
+        </div>
+    </div>
+
+    <div class="panel-grid">
+        <section class="dash-panel">
+            <div class="dash-panel-header">
+                <h2>Recent blog posts</h2>
+                <a href="{{ route('dashboard.blogs') }}" class="btn-dash-ghost">View all</a>
+            </div>
+            <div class="dash-panel-body">
+                <div class="table-responsive">
+                    <table class="table dash-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($recentBlogs as $blog)
+                                <tr>
+                                    <td>{{ Str::limit($blog->title, 36) }}</td>
+                                    <td>{{ $blog->author }}</td>
+                                    <td>{{ $blog->created_at->format('M d, Y') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="empty-state">No blog posts yet</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="dash-panel">
+            <div class="dash-panel-header">
+                <h2>Recent complaints</h2>
+                <a href="{{ route('dashboard.complaints.index') }}" class="btn-dash-ghost">View all</a>
+            </div>
+            <div class="dash-panel-body">
+                <div class="table-responsive">
+                    <table class="table dash-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($recentComplaints as $complaint)
+                                <tr>
+                                    <td>{{ $complaint->name }}</td>
+                                    <td>{{ Str::limit($complaint->message, 36) }}</td>
+                                    <td>{{ $complaint->created_at->format('M d, Y') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="empty-state">No complaints yet</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </div>
 @endsection
