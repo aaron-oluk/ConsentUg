@@ -1,149 +1,60 @@
-<header>
-    <nav class="navbar navbar-expand-lg w-100">
-        <div class="container-fluid">
-            <div class="main">
-                <label for="">
-                    <i class='bx bx-menu'></i>
-                </label>
-                <!-- Logo and Title -->
-                <a class="navbar-brand" href="#">
-                    {{ ucfirst(request()->segment(1) ?: 'Dashboard') }}
-                </a>
+<header class="dashboard-header">
+    <div class="header-left">
+        <button type="button" class="menu-toggle" @click="sidebarOpen = !sidebarOpen" aria-label="Toggle sidebar">
+            <i class='bx bx-menu'></i>
+        </button>
+        <div class="header-title-wrap">
+            <p class="header-eyebrow">Admin</p>
+            <h1 class="header-title">{{ $headerTitle ?? ucfirst(request()->segment(1) ?: 'Dashboard') }}</h1>
+        </div>
+    </div>
+
+    <div class="header-right" x-data="{ open: false }" @click.outside="open = false">
+        <a href="{{ route('home') }}" class="view-site-link" target="_blank" rel="noopener">
+            <i class='bx bx-link-external'></i>
+            <span>View site</span>
+        </a>
+
+        <button type="button" class="profile-trigger" @click="open = !open" aria-expanded="false" :aria-expanded="open">
+            <img
+                src="{{ Auth::user()->profile_photo_url ?? asset('images/profile.png') }}"
+                alt="{{ Auth::user()->name }}"
+                class="profile-avatar"
+            >
+            <div class="profile-meta">
+                <span class="profile-name">{{ \Illuminate\Support\Str::ucfirst(Auth::user()->name) }}</span>
+                <span class="profile-role">{{ Auth::user()->role ?? 'Admin' }}</span>
             </div>
+            <i class='bx bx-chevron-down'></i>
+        </button>
 
-            <!-- Toggle Button for Mobile View -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="sub-menu">
-                <img src="{{ Auth::user()->profile_photo_url ?: asset('images/profile.png') }}"
-                    alt="{{ Auth::user()->name }}" width="30" height="30" class="rounded-circle"
-                    id="profileImage">
-                <div class="sub-menu-dropdown" id="subMenu">
-                    <div class="prof d-flex align-items-center gap-2">
-                        <img src="{{ Auth::user()->profile_photo_url ?: asset('images/profile.png') }}"
-                            alt="{{ Auth::user()->name }}" width="30" height="30" class="rounded-circle">
-                        <h3 class="mb-0">{{ \Illuminate\Support\Str::ucfirst(Auth::user()->name) }}</h3>
-                    </div>
-                    <hr>
-                    <a href="" class="sub-menu-link">
-                        <p><span><i class='bx bx-user-circle'></i>
-                            </span>Profile</p>
-                        <i class='bx bx-chevron-right'></i>
-                    </a>
-                    <a href="{{ route('settings') }}" class="sub-menu-link">
-                        <p><span><i class='bx bx-cog'></i>
-                            </span> Settings</p>
-                        <i class='bx bx-chevron-right'></i>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="sub-menu-link">
-                        @csrf
-                        <button type="submit"
-                            style="background: none; border: none; padding: 0; color: grey; display: flex; align-items: center;">
-                            <p><span><i class='bx bx-log-out'></i></span> Logout</p>
-                        </button>
-                    </form>
-
+        <div class="profile-dropdown" x-cloak x-show="open" x-transition>
+            <div class="profile-dropdown-head">
+                <img
+                    src="{{ Auth::user()->profile_photo_url ?? asset('images/profile.png') }}"
+                    alt="{{ Auth::user()->name }}"
+                    class="profile-avatar"
+                >
+                <div>
+                    <p class="profile-name">{{ \Illuminate\Support\Str::ucfirst(Auth::user()->name) }}</p>
+                    <p class="profile-email">{{ Auth::user()->email }}</p>
                 </div>
             </div>
+            <a href="{{ route('profile.edit') }}" class="profile-dropdown-link">
+                <i class='bx bx-user-circle'></i>
+                Profile
+            </a>
+            <a href="{{ route('settings') }}" class="profile-dropdown-link">
+                <i class='bx bx-cog'></i>
+                Settings
+            </a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="profile-dropdown-link logout">
+                    <i class='bx bx-log-out'></i>
+                    Logout
+                </button>
+            </form>
         </div>
-    </nav>
+    </div>
 </header>
-
-<style>
-    .navbar .sub-menu {
-        position: relative;
-    }
-
-    .sub-menu ul {
-        padding-left: unset;
-    }
-
-    .prof h3 {
-        font-size: 1rem;
-    }
-
-    .sub-menu-dropdown.show {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .sub-menu-dropdown {
-        position: absolute;
-        margin-top: 2rem;
-        padding: 0.5rem;
-        z-index: 1035;
-        top: 100%;
-        right: 8%;
-        background: #ffffff;
-        align-content: left;
-        border-radius: .3rem;
-        color: grey;
-        width: 20vw;
-        display: none;
-        opacity: 0;
-        transform: translateY(-10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .sub-menu-dropdown hr {
-        margin: 10px 0 10px;
-        width: 100%;
-        border: 0;
-        height: 1px;
-        background: #ccc;
-    }
-
-    .sub-menu-link {
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        margin: 8px 0;
-        color: grey;
-        transition: transform .3s;
-    }
-
-    .sub-menu-link:hover p {
-        font-weight: 600;
-        color: green;
-        transition: .3s all ease;
-    }
-
-    .sub-menu-link:hover i {
-        transform: translateX(0.5px);
-    }
-
-    .sub-menu-link p {
-        width: 100%;
-        margin: unset;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .sub-menu-link a {
-        margin: unset;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const profileImage = document.getElementById('profileImage');
-        const subMenu = document.getElementById('subMenu');
-
-        profileImage.addEventListener('click', function(event) {
-            event.stopPropagation();
-            subMenu.classList.toggle('show');
-        });
-
-        // Close the dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.sub-menu')) {
-                subMenu.classList.remove('show');
-            }
-        });
-    });
-</script>

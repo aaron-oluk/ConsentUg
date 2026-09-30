@@ -1,41 +1,54 @@
-<div class="sidebar">
+<aside class="sidebar" :class="{ 'collapsed': !sidebarOpen }">
     <div class="logo-details">
-        <i class='bx bxl-c-plus-plus'></i>
-        <span class="logo_name">{{ config('app.name') }}</span>
+        <img src="{{ asset('images/logo.png') }}" alt="Consent Uganda" class="sidebar-logo">
+        <div class="logo-text">
+            <span class="logo_name">Consent</span>
+            <span class="logo_sub">Uganda</span>
+        </div>
     </div>
-    <div class="sidebar-menu">
+
+    <nav class="sidebar-menu">
+        <p class="menu-label">Main</p>
         <ul class="nav-links">
             @php
-                $routes = [
-                    [route('dashboard'), 'bxs-dashboard', 'Dashboard'],
-                    [route('dashboard.blogs'), 'bx-edit', 'Blog Management'],
-                    [route('dashboard.complaints.index'), 'bx-message-square-detail', 'Complaints'],
-                    [route('users'), 'bx-user', 'Users'],
-                    [route('dashboard.reports.index'), 'bx-file', 'Reports'],
-                    [route('gallery.index'), 'bx-image', 'Gallery Management'],
-                    [route('settings'), 'bx-cog', 'Settings'],
-                    [route('logout'), 'bx-log-out', 'Log out'],
+                $mainRoutes = [
+                    [route('dashboard'), 'bxs-dashboard', 'Dashboard', request()->routeIs('dashboard')],
+                    [route('dashboard.blogs'), 'bx-edit', 'Blog Management', request()->routeIs('dashboard.blogs')],
+                    [route('dashboard.complaints.index'), 'bx-message-square-detail', 'Complaints', request()->routeIs('dashboard.complaints.*')],
+                    [route('users'), 'bx-user', 'Users', request()->routeIs('users')],
+                    [route('dashboard.reports.index'), 'bx-file', 'Reports', request()->routeIs('dashboard.reports.*')],
+                    [route('gallery.index'), 'bx-image', 'Gallery', request()->routeIs('gallery.*')],
                 ];
             @endphp
-            @foreach ($routes as $route)
-                <li data-tooltip="{{ $route[2] }}">
-                    @if ($route[0] === route('logout'))
-                        <form method="POST" action="{{ $route[0] }}" class="d-inline">
-                            @csrf
-                            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();"
-                               class="{{ request()->is('logout') ? 'active' : '' }}">
-                                <i class='bx {{ $route[1] }}'></i>
-                                <span class="link_name">{{ $route[2] }}</span>
-                            </a>
-                        </form>
-                    @else
-                        <a href="{{ $route[0] }}" class="{{ request()->url() == $route[0] ? 'active' : '' }}">
-                            <i class='bx {{ $route[1] }}'></i>
-                            <span class="link_name">{{ $route[2] }}</span>
-                        </a>
-                    @endif
+
+            @foreach ($mainRoutes as [$url, $icon, $label, $active])
+                <li data-tooltip="{{ $label }}">
+                    <a href="{{ $url }}" class="{{ $active ? 'active' : '' }}">
+                        <i class='bx {{ $icon }}'></i>
+                        <span class="link_name">{{ $label }}</span>
+                    </a>
                 </li>
             @endforeach
         </ul>
-    </div>
-</div>
+
+        <p class="menu-label">Account</p>
+        <ul class="nav-links">
+            <li data-tooltip="Settings">
+                <a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Settings</span>
+                </a>
+            </li>
+            <li data-tooltip="Log out">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); this.closest('form').submit();">
+                        <i class='bx bx-log-out'></i>
+                        <span class="link_name">Log out</span>
+                    </a>
+                </form>
+            </li>
+        </ul>
+    </nav>
+</aside>
